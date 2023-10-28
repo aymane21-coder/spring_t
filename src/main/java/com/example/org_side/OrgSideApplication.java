@@ -1,6 +1,7 @@
 package com.example.org_side;
 
 import com.example.org_side.Entities.Categories;
+import com.example.org_side.Entities.Product;
 import com.example.org_side.dao.CategoryRepository;
 import com.example.org_side.dao.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -26,6 +27,17 @@ public class OrgSideApplication {
                 categoryRepository.save(new Categories(c.split(" ")[0], c.split(" ")[1], new ArrayList<>()));
             });
             categoryRepository.findAll().forEach(System.out::println);
+            productRepository.deleteAll();
+            Categories c1 = categoryRepository.findById("C1").get();
+
+            Stream.of("P1","P2","P3").forEach(p->{
+              Product p1=  productRepository.save(new Product(null,p,Math.random()*1000,c1));
+              //pour mettre relation en deu sence
+              c1.getProducts().add(p1);
+              categoryRepository.save(c1);
+             // productRepository.findAll().forEach(System.out::println); boucle infini car j'ai fait un lien entre product et category
+            });
+
         };
     }
 }
